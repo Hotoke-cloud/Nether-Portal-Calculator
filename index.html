@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nether Calculator</title>
+    <style>
+        body {
+            background-color: #000000; /* Premium black background */
+            font-family: 'Minecraft', Arial, sans-serif; /* Attempt to mimic Minecraft font, fallback to Arial */
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden; /* To contain background elements */
+        }
+        
+        /* Minecraft dirt and grass theme: Sharp line back as requested */
+        .dirt-grass-bg {
+            background: linear-gradient(to bottom, #8B4513 50%, #228B22 50%); /* Sharp line back */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3; /* Subtle overlay */
+            animation: float 20s ease-in-out infinite; /* Gentle floating animation for freedom */
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Little decorations: Floating particles for freedom */
+        .decoration {
+            position: absolute;
+            opacity: 0.1;
+            z-index: -1;
+            pointer-events: none;
+            animation: sparkle 10s linear infinite;
+        }
+        
+        .decoration1 {
+            top: 15%;
+            left: 20%;
+            width: 20px;
+            height: 20px;
+            background-color: #FFD700; /* Gold sparkle */
+            border-radius: 50%;
+        }
+        
+        .decoration2 {
+            top: 80%;
+            right: 25%;
+            width: 15px;
+            height: 15px;
+            background-color: #FF6347; /* Red sparkle */
+            border-radius: 50%;
+        }
+        
+        .decoration3 {
+            bottom: 10%;
+            left: 70%;
+            width: 25px;
+            height: 25px;
+            background-color: #00FFFF; /* Cyan sparkle */
+            border-radius: 50%;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { transform: scale(1); opacity: 0.1; }
+            50% { transform: scale(1.5); opacity: 0.3; }
+        }
+        
+        /* Oak trees in background */
+        .oak-tree {
+            position: absolute;
+            z-index: -1;
+            opacity: 0.2;
+            pointer-events: none;
+        }
+        
+        .tree1 {
+            top: 30%;
+            left: 15%;
+            width: 60px;
+            height: 100px;
+        }
+        
+        .tree1::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 40px;
+            background-color: #8B4513; /* Brown trunk */
+        }
+        
+        .tree1::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 60px;
+            background-color: #228B22; /* Green leaves */
+            border-radius: 50%;
+        }
+        
+        .tree2 {
+            top: 50%;
+            left: 80%;
+            width: 50px;
+            height: 80px;
+        }
+        
+        .tree2::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 30px;
+            background-color: #8B4513;
+        }
+        
+        .tree2::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 50px;
+            background-color: #228B22;
+            border-radius: 50%;
+        }
+        
+        /* Floating Minecraft blocks for enhanced background freedom */
+        .floating-block {
+            position: absolute;
+            opacity: 0.1;
+            z-index: -1;
+            pointer-events: none;
+            animation: drift 15s linear infinite;
+        }
+        
+        .block1 {
+            top: 20%;
+            left: 5%;
+            width: 50px;
+            height: 50px;
+            background-color: #8B4513; /* Dirt block */
+            border: 1px solid #654321;
+        }
+        
+        .block2 {
+            top: 70%;
+            right: 10%;
+            width: 40px;
+            height: 40px;
+            background-color: #228B22; /* Grass block */
+            border: 1px solid #006400;
+        }
+        
+        .block3 {
+            bottom: 30%;
+            left: 50%;
+            width: 60px;
+            height: 60px;
+            background-color: #DAA520; /* Gold block */
+            border: 1px solid #B8860B;
+        }
+        
+        .block4 {
+            top: 40%;
+            right: 30%;
+            width: 45px;
+            height: 45px;
+            background-color: #696969; /* Stone block */
+            border: 1px solid #2F2F2F;
+        }
+        
+        @keyframes drift {
+            0% { transform: translateX(0px) translateY(0px); }
+            25% { transform: translateX(20px) translateY(-10px); }
+            50% { transform: translateX(-10px) translateY(20px); }
+            75% { transform: translateX(-20px) translateY(-5px); }
+            100% { transform: translateX(0px) translateY(0px); }
+        }
+        
+        /* Nether Portal on the right side */
+        .nether-portal {
+            position: absolute;
+            right: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 200px;
+            height: 300px;
+            background: linear-gradient(45deg, #4B0082, #8A2BE2, #9370DB); /* Purple portal colors */
+            border: 2px solid #000000;
+            border-radius: 10px;
+            opacity: 0.4;
+            z-index: -1;
+            animation: portal-flicker 2s infinite alternate; /* Flickering effect */
+        }
+        
+        @keyframes portal-flicker {
+            0% { opacity: 0.4; }
+            100% { opacity: 0.6; }
+        }
+        
+        /* Nether theme after the portal: Lava and Soulsand elements */
+        .nether-element {
+            position: absolute;
+            right: 2%;
+            z-index: -1;
+            opacity: 0.3;
+            animation: nether-glow 4s ease-in-out infinite;
+        }
+        
+        .lava1 {
+            top: 20%;
+            width: 50px;
+            height: 30px;
+            background-color: #FF4500; /* Lava orange */
+            border-radius: 5px;
+        }
+        
+        .soulsand1 {
+            top: 70%;
+            width: 40px;
+            height: 40px;
+            background-color: #8B4513; /* Soulsand brown */
+            border: 1px solid #654321;
+        }
+        
+        .netherrack1 {
+            bottom: 10%;
+            width: 60px;
+            height: 60px;
+            background-color: #696969; /* Netherrack gray */
+            border: 1px solid #2F2F2F;
+        }
+        
+        @keyframes nether-glow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* Steve trying to light the portal with flint and steel */
+        .steve {
+            position: absolute;
+            right: 15%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100px;
+            height: 150px;
+            background-image: url('https://static.wikia.nocookie.net/minecraft_gamepedia/images/8/82/Steve.png'); /* Real Minecraft Steve image */
+            background-size: cover;
+            opacity: 0.3;
+            z-index: -1;
+            animation: light-portal 3s ease-in-out infinite; /* Animation for lighting action */
+        }
+        
+        @keyframes light-portal {
+            0%, 100% { transform: translateY(-50%) rotate(0deg); }
+            50% { transform: translateY(-50%) rotate(5deg); } /* Slight swing for lighting motion */
+        }
+        
+        /* Minecraft NPCs in background */
+        .npc {
+            position: absolute;
+            opacity: 0.2; /* Subtle */
+            z-index: -1;
+            pointer-events: none; /* So they don't interfere with interactions */
+            animation: wander 25s ease-in-out infinite; /* NPCs wandering for freedom */
+        }
+        
+        .npc1 {
+            top: 10%;
+            left: 10%;
+            width: 100px;
+            height: 100px;
+            background-image: url('https://static.wikia.nocookie.net/minecraft_gamepedia/images/5/5a/Villager.png'); /* Real Minecraft Villager image */
+            background-size: cover;
+        }
+        
+        .npc2 {
+            top: 60%;
+            right: 15%;
+            width: 80px;
+            height: 80px;
+            background-image: url('https://static.wikia.nocookie.net/minecraft_gamepedia/images/5/5a/Villager.png'); /* Another villager */
+            background-size: cover;
+        }
+        
+        .npc3 {
+            bottom: 20%;
+            left: 20%;
+            width: 120px;
+            height: 120px;
+            background-image: url('https://static.wikia.nocookie.net/minecraft_gamepedia/images/5/5a/Villager.png'); /* Third villager */
+            background-size: cover;
+        }
+        
+        @keyframes wander {
+            0%, 100% { transform: translateX(0px) translateY(0px); }
+            33% { transform: translateX(30px) translateY(10px); }
+            66% { transform: translateX(-20px) translateY(-15px); }
+        }
+        
+        /* Credit box on the right corner */
+        .credit {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: #000000; /* Premium black */
+            color: #ffffff;
+            padding: 5px 10px;
+            border: 1px solid #ffffff;
+            border-radius: 5px;
+            font-size: 12px;
+            z-index: 2;
+        }
+        
+        .header {
+            background: linear-gradient(45deg, #8B4513, #228B22, #DAA520, #696969); /* Mixture of Minecraft block colors: dirt, grass, gold, stone */
+            border: 2px solid #ffffff;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header h1 {
+            font-size: 50px;
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px #000000;
+        }
+        
+        .calculator {
+            background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black for the calculator box */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            width: 400px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .coord-section {
+            display: flex;
+            justify-content: space-around;
+            margin: 10px 0;
+        }
+        
+        .coord-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        label {
+            margin-bottom: 5px;
+        }
+        
+        input {
+            width: 80px;
+            padding: 10px;
+            border: 1px solid #ffffff;
+            border-radius: 5px;
+            background-color: #333333;
+            color: #ffffff;
+            font-size: 16px;
+            text-align: center;
+        }
+        
+        .output {
+            background-color: #000000; /* Perfectly matching premium black for the output boxes */
+            color: #ffffff;
+            padding: 10px;
+            border: 1px solid #ffffff;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: center;
+            width: 80px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 20px 0;
+            background-color: #228B22; /* Grass green */
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #32CD32;
+        }
+    </style>
+</head>
+<body>
+    <div class="dirt-grass-bg"></div>
+    <!-- Oak trees in background -->
+    <div class="oak-tree tree1"></div>
+    <div class="oak-tree tree2"></div>
+    <!-- Little decorations with freedom -->
+    <div class="decoration decoration1"></div>
+    <div class="decoration decoration2"></div>
+    <div class="decoration decoration3"></div>
+    <!-- Floating Minecraft blocks for enhanced background freedom -->
+    <div class="floating-block block1"></div>
+    <div class="floating-block block2"></div>
+    <div class="floating-block block3"></div>
+    <div class="floating-block block4"></div>
+    <!-- Nether Portal and Steve -->
+    <div class="nether-portal"></div>
+    <div class="steve"></div>
+    <!-- Nether theme after the portal -->
+    <div class="nether-element lava1"></div>
+    <div class="nether-element soulsand1"></div>
+    <div class="nether-element netherrack1"></div>
+    <!-- Minecraft NPCs in background -->
+    <div class="npc npc1"></div>
+    <div class="npc npc2"></div>
+    <div class="npc npc3"></div>
+    <!-- Credit box -->
+    <div class="credit">Made By Hotoke</div>
+    
+    <div class="header">
+        <h1>Nether Calculator</h1>
+    </div>
+    <div class="calculator">
+        <h2>Overworld to Nether Coordinates</h2>
+        
+        <h3>Overworld Coordinates</h3>
+        <div class="coord-section">
+            <div class="coord-box">
+                <label for="overworldX">X:</label>
+                <input type="number" id="overworldX" placeholder="0">
+            </div>
+            <div class="coord-box">
+                <label for="overworldY">Y:</label>
+                <input type="number" id="overworldY" placeholder="0">
+            </div>
+            <div class="coord-box">
+                <label for="overworldZ">Z:</label>
+                <input type="number" id="overworldZ" placeholder="0">
+            </div>
+        </div>
+        
+        <button onclick="calculateNether()">Calculate</button>
+        
+        <h3>Nether Coordinates</h3>
+        <div class="coord-section">
+            <div class="coord-box">
+                <label>X:</label>
+                <div class="output" id="netherX">0</div>
+            </div>
+            <div class="coord-box">
+                <label>Y:</label>
+                <div class="output" id="netherY">0</div>
+            </div>
+            <div class="coord-box">
+                <label>Z:</label>
+                <div class="output" id="netherZ">0</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculateNether() {
+            const overworldX = parseFloat(document.getElementById('overworldX').value) || 0;
+            const overworldY = parseFloat(document.getElementById('overworldY').value) || 0;
+            const overworldZ = parseFloat(document.getElementById('overworldZ').value) || 0;
+            
+            // Minecraft Nether conversion: X and Z divided by 8, Y remains the same
+            const netherX = Math.floor(overworldX / 8);
+            const netherY = overworldY; // Y coordinate stays the same in Nether portals
+            const netherZ = Math.floor(overworldZ / 8);
+            
+            document.getElementById('netherX').innerText = netherX;
+            document.getElementById('netherY').innerText = netherY;
+            document.getElementById('netherZ').innerText = netherZ;
+        }
+    </script>
+</body>
+</html>
